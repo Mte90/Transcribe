@@ -12,7 +12,10 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtCore import Qt, QThread, pyqtSignal, QSettings
 from PyQt6.QtGui import QAction, QDragEnterEvent, QDropEvent
 
-from pydub import AudioSegment
+try:
+    from pydub import AudioSegment
+except ImportError:
+    raise ImportError("pydub is required. Install with: pip install pydub")
 
 # Supported file extensions
 SUPPORTED_EXTENSIONS = {'.mp4', '.mkv', '.avi', '.m4a', '.mp3', '.wav', '.ogg', '.webm'}
@@ -73,10 +76,6 @@ def remove_repeated_sentences(text, chunk_index):
 
 def convert_and_split_audio(input_path, chunk_duration_ms, output_dir):
     """Convert audio/video file and split into chunks."""
-    try:
-        from pydub import AudioSegment
-    except ImportError:
-        raise ImportError("pydub is required. Install with: pip install pydub")
     
     os.makedirs(output_dir, exist_ok=True)
     audio = AudioSegment.from_file(input_path)
